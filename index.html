@@ -218,6 +218,9 @@ details.feat[open] .feat-body{grid-template-rows:1fr}
 footer{margin-top:40px;padding:36px 0 48px;border-top:1px solid var(--outline-variant);color:var(--on-surface-variant);font-size:14px}
 footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:center}
 footer b{color:var(--on-surface)}
+.yt-link{display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:var(--primary);font-weight:600;border-radius:999px;padding:6px 12px;transition:background-color .2s var(--ease)}
+.yt-link:hover{background:color-mix(in srgb,var(--primary) 10%,transparent)}
+.yt-link .ms{font-size:20px}
 
 /* ---------- Snackbar ---------- */
 .snackbar{position:fixed;left:50%;bottom:24px;z-index:40;display:flex;align-items:center;gap:12px;min-height:48px;max-width:calc(100% - 32px);
@@ -252,6 +255,7 @@ footer b{color:var(--on-surface)}
   <div class="wrap">
     <a class="brand" href="#top"><span class="brand-dot"><span class="ms fill">waves</span></span>Undertow Studio</a>
     <div class="spacer"></div>
+    <a class="icon-btn" href="https://www.youtube.com/@Braydens_Tech" target="_blank" rel="noopener" aria-label="YouTube channel" title="YouTube: Braydens_Tech"><span class="ms fill">smart_display</span></a>
     <button class="icon-btn" id="themeBtn" aria-label="Toggle dark mode" title="Toggle dark mode"><span class="ms" id="themeIcon">dark_mode</span></button>
   </div>
 </header>
@@ -265,6 +269,7 @@ footer b{color:var(--on-surface)}
     <div class="hero-actions rise d4">
       <a class="btn light" href="#downloads"><span class="ms">download</span>Browse downloads</a>
       <a class="btn glass" href="#help"><span class="ms">help</span>How to install</a>
+      <a class="btn glass" href="https://www.youtube.com/@Braydens_Tech" target="_blank" rel="noopener"><span class="ms fill">smart_display</span>YouTube channel</a>
     </div>
     <div class="stats rise d5">
       <div><b>3</b>Downloads</div>
@@ -494,6 +499,7 @@ footer b{color:var(--on-surface)}
 <footer>
   <div class="wrap">
     <span><b>Undertow Studio</b> &middot; everything here is made by Tekno.</span>
+    <a class="yt-link" href="https://www.youtube.com/@Braydens_Tech" target="_blank" rel="noopener"><span class="ms fill">smart_display</span>youtube.com/@Braydens_Tech</a>
     <span>&copy; <span id="year">2026</span> Undertow Studio</span>
   </div>
 </footer>
