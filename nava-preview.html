@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nava OS Preview</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--acc:#5eead4;--blur:22px;--glass:rgba(255,255,255,.38);--glass2:rgba(255,255,255,.6);--bd:rgba(255,255,255,.6);--tx:#10211f;--tx2:#3f5552;--sh:0 10px 40px rgba(20,40,60,.22)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--glass:rgba(18,26,34,.46);--glass2:rgba(28,38,48,.68);--bd:rgba(255,255,255,.14);--tx:#eef7f6;--tx2:#a9bfbc;--sh:0 10px 40px rgba(0,0,0,.4)}}
+:root[data-theme="dark"]{--glass:rgba(18,26,34,.46);--glass2:rgba(28,38,48,.68);--bd:rgba(255,255,255,.14);--tx:#eef7f6;--tx2:#a9bfbc;--sh:0 10px 40px rgba(0,0,0,.4)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html,body{height:100%;margin:0;overflow:hidden;font:14px/1.4 "Avenir Next","Segoe UI",system-ui,sans-serif;color:var(--tx);background:#0d2b2b}
+#wp{position:fixed;inset:0;transition:background .6s}
+#dim{position:fixed;inset:0;background:#000;pointer-events:none;z-index:900;opacity:0;transition:opacity .2s}
+.glass{background:var(--glass);backdrop-filter:blur(var(--blur)) saturate(1.5);-webkit-backdrop-filter:blur(var(--blur)) saturate(1.5);border:1px solid var(--bd);box-shadow:var(--sh)}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+#bar{position:fixed;top:env(safe-area-inset-top,0px);left:8px;right:8px;margin-top:8px;height:34px;border-radius:17px;display:flex;align-items:center;justify-content:space-between;padding:0 6px;z-index:500}
+#bar button{background:none;border:0;border-radius:14px;padding:4px 12px;height:26px}
+#bar button:hover{background:var(--glass)}
+#dots{display:flex;gap:8px}
+#dots i{width:9px;height:9px;border-radius:50%;background:var(--tx2);opacity:.45;cursor:pointer;transition:all .2s}
+#dots i.on{background:var(--acc);opacity:1;width:24px;border-radius:5px}
+#cc{position:fixed;top:calc(env(safe-area-inset-top,0px) + 50px);right:8px;width:min(320px,calc(100vw - 16px));border-radius:22px;padding:14px;z-index:600;transform:translateY(-12px) scale(.97);opacity:0;pointer-events:none;transition:all .22s}
+#cc.open{transform:none;opacity:1;pointer-events:auto}
+.tg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.tg button{display:flex;flex-direction:column;align-items:flex-start;border:1px solid var(--bd);background:var(--glass);border-radius:16px;padding:10px 12px;text-align:left}
+.tg button small{color:var(--tx2)}
+.tg button.on{background:var(--acc);color:#06201c;border-color:transparent}
+.tg button.on small{color:#06201c;opacity:.7}
+.sl{display:flex;align-items:center;gap:10px;margin:8px 0}
+.sl span{width:74px;color:var(--tx2)}
+input[type=range]{flex:1;accent-color:var(--acc)}
+#dock{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);left:50%;transform:translateX(-50%);display:flex;gap:10px;padding:8px 12px;border-radius:26px;z-index:500}
+#dock button{width:48px;height:48px;border-radius:15px;border:1px solid var(--bd);background:var(--glass2);font-weight:700;font-size:15px;position:relative;transition:transform .15s}
+#dock button:hover{transform:translateY(-6px) scale(1.1)}
+#dock button.run::after{content:"";position:absolute;bottom:-6px;left:50%;margin-left:-3px;width:6px;height:6px;border-radius:50%;background:var(--acc)}
+.win{position:fixed;width:min(460px,92vw);height:300px;border-radius:20px;display:flex;flex-direction:column;overflow:hidden;z-index:10}
+.win.fo{box-shadow:0 18px 60px rgba(10,30,40,.38)}
+.tb{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:grab;touch-action:none;user-select:none}
+.tb b{flex:1;text-align:center;font-weight:600;margin-right:22px}
+.x{width:12px;height:12px;border-radius:50%;background:#ff6b6b;border:0;padding:0}
+.bd{flex:1;overflow:auto;padding:4px 16px 16px}
+.term{font:13px/1.5 ui-monospace,Menlo,Consolas,monospace}
+.term .o{white-space:pre-wrap}
+.term .p{display:flex;gap:6px}
+.term input{flex:1;background:none;border:0;color:inherit;font:inherit}
+.pr{color:var(--acc);filter:brightness(.8)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 14px}
+.row button{border:1px solid var(--bd);background:var(--glass);border-radius:12px;padding:6px 12px}
+.row button.on{outline:2px solid var(--acc)}
+.sw{width:30px;height:30px;border-radius:50%!important;padding:0!important;border:2px solid var(--bd)!important}
+.th{width:62px;height:42px;border-radius:12px!important;padding:0!important}
+h4{margin:10px 0 0;font-weight:600}
+.fl{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}
+.fl div{padding:14px 6px;text-align:center;border-radius:14px;background:var(--glass);border:1px solid var(--bd)}
+#cmd{position:fixed;inset:0;z-index:700;display:none;align-items:flex-start;justify-content:center;padding-top:16vh}
+#cmd.open{display:flex}
+#cb{width:min(540px,92vw);border-radius:22px;padding:10px;background:var(--glass2)}
+#cb input{width:100%;box-sizing:border-box;background:none;border:0;font-size:18px;color:inherit;padding:10px 12px}
+#res button{display:flex;justify-content:space-between;width:100%;border:0;background:none;padding:9px 12px;border-radius:12px;text-align:left}
+#res button.sel{background:var(--acc);color:#06201c}
+#res small{opacity:.65}
+#hint{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 84px);transform:translateX(-50%);padding:6px 14px;border-radius:14px;color:var(--tx2);z-index:5;white-space:nowrap;font-size:12px}
+#lock{position:fixed;inset:0;z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:14vh 0 7vh;box-sizing:border-box;color:#fff;text-align:center;background:rgba(8,18,28,.18);backdrop-filter:blur(26px) saturate(1.3);-webkit-backdrop-filter:blur(26px) saturate(1.3);transition:transform .6s cubic-bezier(.7,0,.3,1),opacity .6s;cursor:pointer}
+#lock.off{transform:translateY(-100%);opacity:0;pointer-events:none}
+#lt{font-size:min(24vw,150px);font-weight:200;letter-spacing:-.04em;line-height:1}
+#ld{font-size:18px;opacity:.85;margin-top:10px}
+.lu{display:flex;flex-direction:column;align-items:center;gap:12px;cursor:default}
+.av{width:56px;height:56px;border-radius:50%;background:var(--acc);color:#06201c;display:grid;place-items:center;font-size:22px;font-weight:600}
+#lp{width:220px;border-radius:20px;border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.2);color:#fff;padding:10px 16px;text-align:center;font:inherit}
+#lp::placeholder{color:rgba(255,255,255,.75)}
+.lu small{opacity:.75}
+#dock button{padding:0}#dock svg{display:block;margin:auto}
+.url,.bq{width:100%;box-sizing:border-box;border-radius:14px;border:1px solid var(--bd);background:var(--glass);color:inherit;padding:8px 12px;font:inherit}
+.bw{text-align:center;padding:14px 0}.bw h2{font-weight:300;margin:6px 0 14px}
+.qk{display:flex;gap:10px;justify-content:center;margin-top:16px;flex-wrap:wrap}.qk button{border:1px solid var(--bd);background:var(--glass);border-radius:14px;padding:12px 14px}
+textarea.nt{width:100%;height:100%;box-sizing:border-box;resize:none;background:none;border:0;color:inherit;font-size:15px;line-height:1.6;font-family:inherit;outline:0}
+.cd{font-size:30px;font-weight:300;text-align:right;padding:6px 8px 10px;min-height:40px}
+.ck{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.ck button{height:40px;border-radius:12px;border:1px solid var(--bd);background:var(--glass);font-size:15px}.ck .op{background:var(--acc);color:#06201c;border-color:transparent}
+.pl{text-align:center}.art{width:130px;height:130px;border-radius:22px;margin:4px auto 10px;background:linear-gradient(135deg,var(--acc),#a78bfa)}
+.pc{display:flex;gap:10px;justify-content:center;align-items:center;margin-top:10px}.pc button{width:42px;height:42px;border-radius:50%;border:1px solid var(--bd);background:var(--glass)}.pc .pp{background:var(--acc);color:#06201c;width:52px;height:52px}
+.cg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}.cg span{padding:7px 0;border-radius:10px}.cg .td{background:var(--acc);color:#06201c;font-weight:600}.cg .wd{color:var(--tx2)}
+@media (max-width:520px){#dock{gap:6px;padding:6px 8px}#dock button{width:38px;height:38px}}
+.win{max-width:calc(100vw - 16px);max-height:calc(100dvh - 120px)}
+.tc{display:flex;gap:8px}.tc button{width:12px;height:12px;border-radius:50%;border:0;padding:0}.mn{background:#fbbf24}.mx{background:#34d399}
+.tb b{margin-right:52px}
+#lt{background:radial-gradient(circle at var(--mx,50%) var(--my,25%),#fff 0,rgba(255,255,255,.88) 30%,rgba(255,255,255,.38) 75%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;filter:drop-shadow(0 6px 28px rgba(0,0,0,.28));font-weight:300;font-variant-numeric:tabular-nums}
+#lt[data-cs=thin]{background:none;-webkit-text-fill-color:#fff;color:#fff;font-weight:200}
+#lt[data-cs=bold]{background:none;-webkit-text-fill-color:#fff;color:#fff;font-weight:700;letter-spacing:-.05em}
+.lu b{font-size:18px;font-weight:600}
+@media (min-width:521px){#dock button{width:var(--dk,48px);height:var(--dk,48px)}}
+.glass{background:linear-gradient(145deg,rgba(255,255,255,.24),rgba(255,255,255,.05)),var(--glass);backdrop-filter:blur(var(--blur)) saturate(1.8) brightness(1.06);-webkit-backdrop-filter:blur(var(--blur)) saturate(1.8) brightness(1.06);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -1px 0 rgba(255,255,255,.1),var(--sh)}
+.win.fo{box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 26px 80px rgba(10,30,40,.42)}
+.win{border-radius:26px;animation:pop .3s cubic-bezier(.2,.9,.3,1.15)}
+@keyframes pop{from{opacity:0;transform:scale(.92) translateY(12px)}}
+#dock{border-radius:32px}#dock button{border-radius:32%;transition:transform .12s ease-out,box-shadow .2s;box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 4px 12px rgba(0,0,0,.18)}
+#cc{border-radius:30px}.tg button{border-radius:22px}#cb{border-radius:28px}#res button{border-radius:16px}
+.url,.bq{border-radius:18px}.th{border-radius:18px!important}.row button{border-radius:14px}
+button:active{filter:brightness(.92)}button{transition:background .2s,filter .15s}
+@supports (corner-shape:squircle){#dock button{border-radius:42%;corner-shape:squircle}.win{border-radius:40px;corner-shape:squircle}.th{border-radius:26px!important;corner-shape:squircle}}
+.wt{display:flex;gap:6px;padding:0 14px 8px;overflow-x:auto}
+.tab{display:flex;align-items:center;gap:8px;border:1px solid var(--bd);background:var(--glass);border-radius:14px;padding:5px 10px;white-space:nowrap}.tab.on{background:var(--glass2);outline:2px solid var(--acc)}.tab i{font-style:normal;opacity:.6;padding:0 2px}
+.wb{display:flex;gap:6px;padding:0 14px 8px;align-items:center}.wb button{width:32px;height:32px;border-radius:50%;border:1px solid var(--bd);background:var(--glass);font-size:18px;padding:0}.wb .url{flex:1;min-width:0}
+.ext{white-space:nowrap;font-size:12px;color:var(--tx2)}
+.wc{flex:1;min-height:0;margin:0 14px 14px;border-radius:20px;overflow:auto;background:var(--glass)}.wc iframe{width:100%;height:100%;border:0;background:#fff;border-radius:20px}
+#setup{position:fixed;inset:0;z-index:1100;display:none;place-items:center;background:rgba(8,18,28,.4);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px)}#setup.open{display:grid}
+.sc{width:min(360px,90vw);border-radius:30px;padding:22px}.sc h2{margin:0 0 6px;font-weight:600}.sc p{margin:0 0 12px;color:var(--tx2)}.sc .url{margin-top:8px}#se{min-height:20px;margin-top:8px;color:#ff8a8a}
+#lac{display:flex;gap:8px}#lac button{width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.18);color:#fff;font-weight:600;padding:0}#lac button.on{background:var(--acc);color:#06201c}
+.rd{padding:14px 16px}.rd h3{margin:0 0 10px}.hit{display:flex;flex-direction:column;align-items:flex-start;width:100%;text-align:left;border:0;background:none;padding:8px 10px;border-radius:14px}.hit:hover{background:var(--glass2)}.hit span{color:var(--tx2);font-size:12px}
+.ar{white-space:pre-wrap;font-family:inherit;font-size:14px;line-height:1.6;margin:0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="wp"></div>
+<div id="bar" class="glass">
+  <button id="nv" aria-label="Open command bar"><b>Nava</b></button>
+  <div id="dots"></div>
+  <button id="st" aria-label="Open Control Center"><span id="clk"></span> &nbsp;⌃</button>
+</div>
+<div id="cc" class="glass" aria-hidden="true">
+  <div class="tg">
+    <button data-t="wifi" class="on">Wi‑Fi<small>Nava‑Home</small></button>
+    <button data-t="bt" class="on">Bluetooth<small>On</small></button>
+    <button data-t="focus">Focus<small>Off</small></button>
+    <button data-t="dark">Dark mode<small>Off</small></button>
+    <button data-t="lock">Lock screen<small>Alt + L</small></button>
+    <button data-t="fs">Full screen<small>Toggle</small></button>
+  </div>
+  <div class="sl"><span>Sound</span><input id="vol" type="range" value="60" aria-label="Sound"></div>
+  <div class="sl"><span>Brightness</span><input id="br" type="range" min="20" value="100" aria-label="Brightness"></div>
+</div>
+<div id="cmd"><div id="cb" class="glass"><input id="q" placeholder="Launch an app or run a command" autocomplete="off"><div id="res"></div></div></div>
+<div id="hint" class="glass">Super, Ctrl or Alt + Space opens the command bar</div>
+<div id="dock" class="glass"></div>
+<div id="lock"><div><div id="lt"></div><div id="ld"></div></div><div class="lu"><div id="lac"></div><div class="av" id="av">N</div><b id="ln"></b><input id="lp" type="password" placeholder="Password (anything works)" aria-label="Password"><small id="lm"></small></div></div>
+<div id="setup"><div class="glass sc"><h2 id="sh">Create your account</h2><p id="sp">Welcome to Nava OS. Choose a name and an optional password.</p><input class="url" id="s1" placeholder="Name" aria-label="Name" maxlength="24" autocomplete="off"><input class="url" id="s2" type="password" placeholder="Password (optional)" aria-label="Password"><input class="url" id="s3" type="password" placeholder="Repeat password" aria-label="Repeat password"><div id="se"></div><div class="row"><button id="sb">Create account</button><button id="sc2" style="display:none">Cancel</button></div></div></div>
+<div id="dim"></div>
+<script>
+const $=s=>document.querySelector(s),R=document.documentElement;
+const WP=[
+"radial-gradient(at 18% 22%,#5eead4,transparent 52%),radial-gradient(at 82% 28%,#a78bfa,transparent 55%),radial-gradient(at 50% 95%,#38bdf8,transparent 50%),#134e4a",
+"radial-gradient(at 20% 80%,#fbcfe8,transparent 55%),radial-gradient(at 80% 20%,#c4b5fd,transparent 55%),#4c1d95",
+"radial-gradient(at 70% 80%,#fde68a,transparent 50%),radial-gradient(at 20% 20%,#fda4af,transparent 55%),#7c2d12",
+"radial-gradient(at 30% 30%,#bbf7d0,transparent 55%),radial-gradient(at 80% 70%,#7dd3fc,transparent 55%),#064e3b",
+"radial-gradient(at 80% 20%,#bae6fd,transparent 55%),radial-gradient(at 20% 80%,#e9d5ff,transparent 55%),#1e3a8a",
+"radial-gradient(at 50% 20%,#fed7aa,transparent 55%),radial-gradient(at 50% 90%,#99f6e4,transparent 55%),#0f172a"];
+const W=["linear-gradient(112deg,rgba(255,255,255,.2) 0 16%,transparent 16% 38%,rgba(255,255,255,.1) 38% 60%,transparent 60%),radial-gradient(at 12% 14%,#67e8f9,transparent 50%),radial-gradient(at 86% 22%,#c084fc,transparent 52%),radial-gradient(at 58% 98%,#5eead4,transparent 55%),#0f3d4a","linear-gradient(68deg,rgba(255,255,255,.22) 0 20%,transparent 20% 45%,rgba(255,255,255,.1) 45% 70%,transparent 70%),radial-gradient(at 20% 85%,#fbcfe8,transparent 55%),radial-gradient(at 85% 15%,#a5b4fc,transparent 55%),#5b21b6","linear-gradient(120deg,rgba(255,255,255,.35) 0 24%,transparent 24% 50%,rgba(255,255,255,.2) 50% 75%,transparent 75%),radial-gradient(at 15% 20%,#fff,transparent 45%),radial-gradient(at 85% 80%,#99f6e4,transparent 55%),#bfe9e2","linear-gradient(100deg,rgba(255,255,255,.4) 0 20%,transparent 20% 48%,rgba(255,255,255,.25) 48% 72%,transparent 72%),radial-gradient(at 80% 15%,#fbcfe8,transparent 50%),radial-gradient(at 15% 85%,#ddd6fe,transparent 55%),#f5d9e8","linear-gradient(135deg,rgba(255,255,255,.14) 0 30%,transparent 30% 55%,rgba(255,255,255,.08) 55%),radial-gradient(at 75% 90%,#fb923c,transparent 50%),radial-gradient(at 20% 15%,#6366f1,transparent 55%),#1e1b4b","linear-gradient(80deg,rgba(255,255,255,.2) 0 18%,transparent 18% 42%,rgba(255,255,255,.12) 42% 66%,transparent 66%),radial-gradient(at 25% 30%,#86efac,transparent 50%),radial-gradient(at 80% 75%,#38bdf8,transparent 55%),#0b3b3a"];const N=["linear-gradient(115deg,rgba(255,255,255,.16) 0 14%,transparent 14% 36%,rgba(255,255,255,.1) 36% 58%,transparent 58% 80%,rgba(255,255,255,.08) 80%),radial-gradient(at 10% 12%,#7ff0dc,transparent 48%),radial-gradient(at 88% 20%,#b69cf7,transparent 50%),radial-gradient(at 55% 100%,#5fd0e8,transparent 55%),#1b5f68","linear-gradient(65deg,rgba(255,255,255,.18) 0 18%,transparent 18% 44%,rgba(255,255,255,.1) 44% 68%,transparent 68%),radial-gradient(at 15% 90%,#f3b6e0,transparent 52%),radial-gradient(at 90% 10%,#9db4ff,transparent 52%),radial-gradient(at 50% 40%,#8b6ee0,transparent 60%),#3b2a82","linear-gradient(125deg,rgba(255,255,255,.2) 0 16%,transparent 16% 40%,rgba(255,255,255,.12) 40% 64%,transparent 64%),radial-gradient(at 80% 10%,#c9e9ff,transparent 50%),radial-gradient(at 12% 80%,#d8c8ff,transparent 52%),radial-gradient(at 70% 95%,#8fe3d4,transparent 50%),#4a7fb8","linear-gradient(75deg,rgba(255,255,255,.2) 0 20%,transparent 20% 46%,rgba(255,255,255,.12) 46% 70%,transparent 70%),radial-gradient(at 18% 18%,#ffc4dd,transparent 50%),radial-gradient(at 85% 75%,#d6b8ff,transparent 52%),radial-gradient(at 45% 100%,#ffd9c2,transparent 50%),#8b4a8f","linear-gradient(110deg,rgba(255,255,255,.18) 0 18%,transparent 18% 42%,rgba(255,255,255,.1) 42% 66%,transparent 66%),radial-gradient(at 15% 80%,#b8f5d8,transparent 52%),radial-gradient(at 85% 20%,#8fd8ff,transparent 52%),radial-gradient(at 60% 60%,#c9f0a8,transparent 50%),#2a7a6c","linear-gradient(90deg,rgba(255,255,255,.16) 0 22%,transparent 22% 48%,rgba(255,255,255,.1) 48% 72%,transparent 72%),radial-gradient(at 80% 85%,#ffd2a8,transparent 52%),radial-gradient(at 15% 20%,#ffb3c8,transparent 52%),radial-gradient(at 50% 50%,#c9b3ff,transparent 55%),#9b5a6e"];const WN=["Teal Haze","Violet Dusk","Soft Sky","Rose Quartz","Mint Glass","Peach Light"];WP.length=0;WP.push(...N);
+const DEF={theme:"auto",acc:"#5eead4",wp:0,fit:"cover",blur:22,h24:false,cs:"glass",vol:60,br:100,dk:48,idle:0,name:"",pw:null,custom:null,acs:[],cur:0,tg:{wifi:true,bt:true,focus:false}};
+let S={...DEF};try{S={...DEF,...JSON.parse(localStorage.getItem("nava.s")||"{}")}}catch(e){}S.tg={...DEF.tg,...(S.tg||{})};
+function save(){try{const a=S.acs&&S.acs[S.cur];if(a){a.name=S.name;a.pw=S.pw}localStorage.setItem("nava.s",JSON.stringify(S))}catch(e){}}
+const ACC=["#5eead4","#a78bfa","#f9a8d4","#fcd34d","#7dd3fc"];
+let ws=0,z=20,wins=[],sel=0,list=[];
+const APPS={
+ terminal:{t:"Terminal",i:'<path d="M5 8l4 4-4 4M12 17h7"/>',c:"linear-gradient(135deg,#475569,#0f172a)",b:term},
+ browser:{t:"Browser",i:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>',c:"linear-gradient(135deg,#5eead4,#0ea5e9)",h:430,b:web},
+ files:{t:"Files",i:'<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',c:"linear-gradient(135deg,#7dd3fc,#3b82f6)",b:files},
+ notes:{t:"Notes",i:'<path d="M6 4h12v16H6zM9 9h6M9 13h6M9 17h3"/>',c:"linear-gradient(135deg,#fde68a,#f59e0b)",b:notes},
+ calc:{t:"Calculator",i:'<rect x="5" y="3" width="14" height="18" rx="3"/><path d="M8 7h8M8 12h1M12 12h1M16 12h0M8 16h1M12 16h1"/>',c:"linear-gradient(135deg,#fb923c,#ef4444)",h:390,b:calc},
+ music:{t:"Music",i:'<path d="M9 18V6l10-2v12"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="16" r="2"/>',c:"linear-gradient(135deg,#f472b6,#8b5cf6)",h:370,b:music},
+ cal:{t:"Calendar",i:'<rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/>',c:"linear-gradient(135deg,#86efac,#10b981)",h:340,b:cal},
+ settings:{t:"Settings",i:'<circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/>',c:"linear-gradient(135deg,#94a3b8,#475569)",h:430,b:settings}
+};
+const ic=k=>`<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${APPS[k].i}</svg>`;
+function setWP(i){S.wp=i;const w=$("#wp").style;if(i==="custom"&&S.custom)w.background="url("+S.custom+") center/cover no-repeat";else{if(i==="custom")i=S.wp=0;w.background=WP[i]}w.backgroundSize=S.fit;w.backgroundPosition="center";w.backgroundRepeat="no-repeat";save()}
+function setAcc(c){S.acc=c;save();R.style.setProperty("--acc",c)}
+function setTheme(t){S.theme=t;save();if(t==="auto")R.removeAttribute("data-theme");else R.setAttribute("data-theme",t);syncDark()}
+function isDark(){const t=R.getAttribute("data-theme");return t?t==="dark":matchMedia("(prefers-color-scheme:dark)").matches}
+function syncDark(){const b=document.querySelector('[data-t=dark]');b.classList.toggle("on",isDark());b.querySelector("small").textContent=isDark()?"On":"Off"}
+function clock(){$("#clk").textContent=new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit",hour12:!S.h24})}
+function dots(){$("#dots").innerHTML=[0,1,2].map(i=>`<i class="${i===ws?"on":""}" data-w="${i}"></i>`).join("")}
+function gotoWs(i){ws=i;dots();wins.forEach(w=>w.el.style.display=w.ws===ws&&!w.min?"":"none")}
+function dock(){$("#dock").innerHTML=Object.keys(APPS).map(k=>`<button data-a="${k}" title="${APPS[k].t}" class="${wins.some(w=>w.id===k)?"run":""}" style="background:${APPS[k].c}">${ic(k)}</button>`).join("")}
+function focusW(w){wins.forEach(x=>x.el.classList.remove("fo"));w.el.classList.add("fo");w.el.style.zIndex=++z}
+function openApp(id){
+ let w=wins.find(x=>x.id===id);
+ if(w){w.ws=ws;w.min=false;gotoWs(ws);focusW(w);return}
+ const a=APPS[id],el=document.createElement("div");
+ el.className="win glass";
+ el.innerHTML=`<div class="tb"><span class="tc"><button class="x" aria-label="Close"></button><button class="mn" aria-label="Minimize"></button><button class="mx" aria-label="Maximize"></button></span><b>${a.t}</b></div><div class="bd"></div>`;
+ const n=wins.length;
+ el.style.left=Math.max(8,Math.min(innerWidth-480,90+n*40))+"px";
+ el.style.top=(70+n*34)+"px";if(a.h)el.style.height=a.h+"px";
+ document.body.appendChild(el);
+ w={id,el,ws};wins.push(w);
+ a.b(el.querySelector(".bd"));
+ const tb=el.querySelector(".tb");
+ tb.addEventListener("pointerdown",e=>{
+  if(e.target.closest("button")||w.max)return;
+  focusW(w);const r=el.getBoundingClientRect(),dx=e.clientX-r.left,dy=e.clientY-r.top;
+  tb.setPointerCapture(e.pointerId);tb.style.cursor="grabbing";
+  const mv=ev=>{el.style.left=Math.max(0,ev.clientX-dx)+"px";el.style.top=Math.max(48,ev.clientY-dy)+"px"};
+  const up=()=>{tb.removeEventListener("pointermove",mv);tb.removeEventListener("pointerup",up);tb.style.cursor=""};
+  tb.addEventListener("pointermove",mv);tb.addEventListener("pointerup",up);
+ });
+ el.addEventListener("pointerdown",()=>focusW(w));
+ el.querySelector(".x").onclick=()=>{el.remove();wins=wins.filter(x=>x!==w);dock()};
+ el.querySelector(".mn").onclick=()=>{w.min=true;el.style.display="none"};
+ el.querySelector(".mx").onclick=()=>maxW(w);tb.ondblclick=e=>{if(!e.target.closest("button"))maxW(w)};
+ focusW(w);dock();
+}
+function tile(){
+ const v=wins.filter(w=>w.ws===ws);if(!v.length)return;
+ const W=innerWidth-24,H=innerHeight-150,g=10,cw=(W-g*(v.length-1))/v.length;
+ v.forEach((w,i)=>{const s=w.el.style;s.left=12+i*(cw+g)+"px";s.top="58px";s.width=cw+"px";s.height=H+"px"});
+}
+function term(b){
+ b.innerHTML='<div class="term"><div class="o">Nava OS 1.0 design preview. Type help to see commands.\n</div><div class="p"><span class="pr">nava ~ $</span><input aria-label="Terminal input" autocomplete="off" spellcheck="false"></div></div>';
+ const out=b.querySelector(".o"),inp=b.querySelector("input"),pk=[];
+ b.onclick=()=>inp.focus();
+ inp.onkeydown=e=>{
+  if(e.key!=="Enter")return;
+  const c=inp.value.trim();inp.value="";out.textContent+="nava ~ $ "+c+"\n";
+  const [m,...r]=c.split(/\s+/);let o="";
+  if(m==="help")o="help  clear  neofetch  date  tile  navapkg install <name>  navapkg list\n";
+  else if(m==="clear"){out.textContent=""}
+  else if(m==="date")o=new Date().toString()+"\n";
+  else if(m==="tile"){tile();o="Windows tiled.\n"}
+  else if(m==="neofetch")o="  nava os 1.0 (preview)\n  kernel   minimal custom\n  shell    nava compositor (Wayland)\n  pkg      navapkg\n  theme    Liquid Glass\n";
+  else if(m==="navapkg"&&r[0]==="install"&&r[1]){o="resolving "+r[1]+"...\ndownloading "+r[1]+"  [##########] 100%\ninstalled "+r[1]+"\n";pk.push(r[1]);addLx(r[1])}
+  else if(m==="navapkg"&&r[0]==="list")o=pk.length?pk.join("\n")+"\n":"No extra packages installed.\n";
+  else if(c)o="Command not found: "+m+". Type help.\n";
+  out.textContent+=o;b.scrollTop=b.scrollHeight;
+ };
+ setTimeout(()=>inp.focus(),50);
+}
+function appear(b){
+ b.innerHTML=`<h4>Theme</h4><div class="row" id="a1"><button data-m="light">Light</button><button data-m="dark">Dark</button><button data-m="auto">Auto</button></div>
+ <h4>Accent</h4><div class="row" id="a2">${ACC.map(c=>`<button class="sw" data-c="${c}" style="background:${c}" aria-label="Accent ${c}"></button>`).join("")}</div>
+ <h4>Wallpaper</h4><div class="row" id="a3">${WP.map((w,i)=>`<button class="th" data-i="${i}" style="background:${w}" aria-label="Wallpaper ${i+1}"></button>`).join("")}</div>
+ <h4>Glass blur</h4><div class="sl"><input id="bl" type="range" min="0" max="40" value="22" aria-label="Glass blur"></div>`;
+ b.onclick=e=>{const t=e.target.closest("button");if(!t)return;
+  if(t.dataset.m)setTheme(t.dataset.m);if(t.dataset.c)setAcc(t.dataset.c);if(t.dataset.i)setWP(+t.dataset.i)};
+ b.querySelector("#bl").oninput=e=>R.style.setProperty("--blur",e.target.value+"px");
+}
+function files(b){
+ b.innerHTML='<div class="fl">'+["Documents","Pictures","Music","Projects","Downloads","Videos"].map(n=>`<div>${n}</div>`).join("")+"</div>";
+}
+function lockT(){const d=new Date();$("#lt").textContent=d.toLocaleTimeString([],{hour:"numeric",minute:"2-digit",hour12:!S.h24}).replace(/ ?[AP]M/i,"");$("#ld").textContent=d.toLocaleDateString([],{weekday:"long",month:"long",day:"numeric"})}
+function lock(on){$("#lock").classList.toggle("off",!on);if(on){cmd(false);$("#cc").classList.remove("open");$("#lp").value="";lockT();$("#lm").textContent=S.pw?"Enter your password":"Press Enter or click anywhere to unlock";setTimeout(()=>$("#lp").focus(),300)}}
+$("#lock").onclick=e=>{if(e.target.id!=="lp"&&!S.pw)lock(false)};
+$("#lp").onkeydown=e=>{if(e.key==="Enter")unlockTry()};
+function browser(b){
+ b.innerHTML='<input class="url" value="nava://start" aria-label="Address"><div class="bw"><h2>Search the web</h2><input class="bq" placeholder="Search or enter an address" aria-label="Search"><div class="qk"><button>Docs</button><button>Videos</button><button>Mail</button><button>Maps</button></div></div>';
+ const u=b.querySelector(".url");
+ b.querySelector(".qk").onclick=e=>{if(e.target.tagName==="BUTTON")u.value="nava://"+e.target.textContent.toLowerCase()};
+ b.querySelector(".bq").onkeydown=e=>{if(e.key==="Enter"){u.value="nava://search?q="+encodeURIComponent(e.target.value);e.target.value=""}};
+}
+let note="";
+function notes(b){b.style.padding="8px 16px";b.innerHTML='<textarea class="nt" placeholder="Start typing a note…" aria-label="Note"></textarea>';const t=b.querySelector("textarea");t.value=note;t.oninput=()=>note=t.value}
+function ev(s){let i=0;const p=()=>{let v=m();while(s[i]==="+"||s[i]==="-"){const o=s[i++],r=m();v=o==="+"?v+r:v-r}return v},m=()=>{let v=a();while(s[i]==="*"||s[i]==="/"){const o=s[i++],r=a();v=o==="*"?v*r:v/r}return v},a=()=>{if(s[i]==="-"){i++;return -a()}if(s[i]==="("){i++;const v=p();i++;return v}const j=i;while(/[0-9.]/.test(s[i]||""))i++;return parseFloat(s.slice(j,i))};const r=p();if(i<s.length||!isFinite(r))throw 0;return +r.toFixed(10)}
+function calc(b){
+ b.innerHTML='<div class="cd">0</div><div class="ck"></div>';
+ const d=b.querySelector(".cd"),k=b.querySelector(".ck");let s="";
+ k.innerHTML=["C","(",")","/","7","8","9","*","4","5","6","-","1","2","3","+","0",".","⌫","="].map(x=>`<button class="${/[\/*\-+=]/.test(x)?"op":""}">${x}</button>`).join("");
+ k.onclick=e=>{if(e.target.tagName!=="BUTTON")return;const x=e.target.textContent;
+  if(x==="C")s="";else if(x==="⌫")s=s.slice(0,-1);
+  else if(x==="="){try{s=String(ev(s))}catch(_){s="Error"}}
+  else s=(s==="Error"?"":s)+x;
+  d.textContent=s||"0"};
+}
+const TR=[["Soft Glass","Nava Sessions"],["Calm Signal","Low Tide"],["Blue Hour","Mira Vale"]];
+function music(b){
+ let n=0,pl=false,pr=0;
+ b.innerHTML='<div class="pl"><div class="art"></div><b id="mt"></b><div id="ma" style="color:var(--tx2)"></div><input type="range" id="mp" value="0" aria-label="Progress" style="width:100%;margin-top:10px;accent-color:var(--acc)"><div class="pc"><button aria-label="Previous">«</button><button class="pp" aria-label="Play or pause">▶</button><button aria-label="Next">»</button></div></div>';
+ const q=s=>b.querySelector(s),t=q("#mt"),a=q("#ma"),p=q("#mp"),pp=q(".pp");
+ const sh=()=>{t.textContent=TR[n][0];a.textContent=TR[n][1];p.value=pr;pp.textContent=pl?"❚❚":"▶"};
+ q(".pc").onclick=e=>{const x=e.target.getAttribute("aria-label");if(x==="Next"){n=(n+1)%3;pr=0}else if(x==="Previous"){n=(n+2)%3;pr=0}else if(x)pl=!pl;sh()};
+ const iv=setInterval(()=>{if(!b.isConnected)return clearInterval(iv);if(pl){pr=(pr+1)%101;p.value=pr}},400);
+ sh();
+}
+function cal(b){
+ const d=new Date(),f=new Date(d.getFullYear(),d.getMonth(),1).getDay(),n=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();
+ let h=["S","M","T","W","T","F","S"].map(x=>`<span class="wd">${x}</span>`).join("")+"<span></span>".repeat(f);
+ for(let i=1;i<=n;i++)h+=`<span class="${i===d.getDate()?"td":""}">${i}</span>`;
+ b.innerHTML=`<h4 style="margin:0 0 10px;font-size:18px">${d.toLocaleDateString([],{month:"long",year:"numeric"})}</h4><div class="cg">${h}</div>`;
+}
+const MX=()=>({left:"8px",top:"calc(env(safe-area-inset-top,0px) + 54px)",width:innerWidth-16+"px",height:innerHeight-130+"px"});
+function maxW(w){const s=w.el.style;if(w.max){Object.assign(s,w.pv);w.max=false}else{w.pv={left:s.left,top:s.top,width:s.width,height:s.height};Object.assign(s,MX());w.max=true}focusW(w)}
+addEventListener("resize",()=>wins.forEach(w=>{if(w.max)Object.assign(w.el.style,MX());else{const r=w.el.getBoundingClientRect();w.el.style.left=Math.max(0,Math.min(r.left,innerWidth-r.width))+"px";w.el.style.top=Math.max(48,Math.min(r.top,innerHeight-r.height-70))+"px"}}));
+async function H(s){try{const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("nava:"+s));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}catch(e){return"p:"+s}}
+async function unlockTry(){const v=$("#lp").value;if(!S.pw||await H(v)===S.pw)lock(false);else{$("#lp").value="";$("#lm").textContent="Wrong password. Try again."}}
+function setBr(v){S.br=v;save();$("#br").value=v;$("#dim").style.opacity=(100-v)/100*.6}
+function setVol(v){S.vol=v;save();$("#vol").value=v}
+function applyS(){setTheme(S.theme);setAcc(S.acc);setWP(S.wp);R.style.setProperty("--blur",S.blur+"px");R.style.setProperty("--dk",S.dk+"px");$("#vol").value=S.vol;$("#br").value=S.br;$("#dim").style.opacity=(100-S.br)/100*.6;$("#lt").dataset.cs=S.cs;$("#lp").placeholder=S.pw?"Password":"Press Enter to unlock";$("#lm").textContent=S.pw?"Enter your password":"Press Enter or click anywhere to unlock";$("#ln").textContent=S.name;$("#av").textContent=(S.name||"N")[0].toUpperCase();$("#av").style.background=(S.acs[S.cur]||{}).c||"";$("#lac").innerHTML=S.acs.length>1?S.acs.map((a,i)=>`<button data-ac="${i}" class="${i===S.cur?"on":""}" aria-label="${esc(a.name)}">${esc((a.name[0]||"?").toUpperCase())}</button>`).join(""):"";for(const t of["wifi","bt","focus"]){const b=document.querySelector("[data-t="+t+"]"),on=S.tg[t];b.classList.toggle("on",on);b.querySelector("small").textContent=t==="wifi"?(on?"Nava‑Home":"Off"):on?"On":"Off"}clock();lockT()}
+let act=Date.now();["pointerdown","keydown"].forEach(t=>addEventListener(t,()=>act=Date.now()));
+setInterval(()=>{if(S.idle&&$("#lock").classList.contains("off")&&Date.now()-act>S.idle*6e4)lock(true)},5000);
+$("#lock").addEventListener("pointermove",e=>{const r=$("#lt").getBoundingClientRect(),s=$("#lt").style;s.setProperty("--mx",(e.clientX-r.left)/r.width*100+"%");s.setProperty("--my",(e.clientY-r.top)/r.height*100+"%")});
+function parse(v){return v==="true"?true:v==="false"?false:/^\d+$/.test(v)?+v:v}
+function settings(b){
+ const ch=(k,o)=>`<div class="row" data-k="${k}">${o.map(([v,l])=>`<button data-v="${v}" class="${String(S[k])===String(v)?"on":""}">${l}</button>`).join("")}</div>`;
+ const sl=(k,mn,mx)=>`<input type="range" data-s="${k}" min="${mn}" max="${mx}" value="${S[k]}" aria-label="${k}" style="width:100%;accent-color:var(--acc)">`;
+ b.innerHTML=`<h4>Theme</h4>${ch("theme",[["light","Light"],["dark","Dark"],["auto","Auto"]])}
+<h4>Accent</h4><div class="row">${ACC.map(c=>`<button class="sw" data-c="${c}" style="background:${c}" aria-label="Accent ${c}"></button>`).join("")}</div>
+<h4>Glass blur</h4>${sl("blur",0,40)}
+<h4>Dock size</h4>${ch("dk",[[40,"Small"],[48,"Medium"],[58,"Large"]])}
+<h4>Wallpaper</h4><div class="row">${WP.map((w,i)=>`<button class="th" data-i="${i}" title="${WN[i]}" style="background:${w}" aria-label="${WN[i]}"></button>`).join("")}${S.custom?`<button class="th" data-i="custom" style="background:url(${S.custom}) center/cover" aria-label="Custom wallpaper"></button>`:""}</div>
+<div class="row"><button id="upb">Upload image</button><input id="upf" type="file" accept="image/*" hidden></div>
+<h4>Wallpaper fit</h4>${ch("fit",[["cover","Fill"],["contain","Fit"],["100% 100%","Stretch"],["auto","Center"]])}
+<h4>Lock screen clock</h4>${ch("cs",[["glass","Glass"],["thin","Thin"],["bold","Bold"]])}
+<h4>Time format</h4>${ch("h24",[[false,"12-hour"],[true,"24-hour"]])}
+<h4>Auto-lock</h4>${ch("idle",[[0,"Never"],[1,"1 min"],[5,"5 min"]])}
+<h4>Accounts</h4><div class="row">${S.acs.map((a,i)=>`<button data-ac="${i}" class="${i===S.cur?"on":""}">${esc(a.name)}</button>`).join("")}<button id="aa">+ Add account</button>${S.acs.length>1?'<button id="ad">Delete this account</button>':""}</div>
+<h4>Display name</h4><input class="url" data-s="name" value="${S.name.replace(/"/g,"&quot;")}" placeholder="Shown on the lock screen" aria-label="Display name">
+<h4>Sound</h4>${sl("vol",0,100)}<h4>Brightness</h4>${sl("br",20,100)}
+<h4>Password</h4><input class="url" id="p0" type="password" placeholder="Current password" aria-label="Current password" style="${S.pw?"":"display:none"}"><input class="url" id="p1" type="password" placeholder="New password (blank removes it)" aria-label="New password" style="margin-top:6px"><input class="url" id="p2" type="password" placeholder="Repeat new password" aria-label="Repeat new password" style="margin-top:6px">
+<div class="row"><button id="pb">Save password</button><span id="pm" style="color:var(--tx2);align-self:center"></span></div>
+<h4>Reset</h4><div class="row"><button id="rs">Reset all settings</button></div>`;
+ const q=s=>b.querySelector(s);
+ b.onclick=async e=>{const t=e.target.closest("button");if(!t)return;const k=t.parentNode.dataset.k;
+  if(k){const v=parse(t.dataset.v);S[k]=v;save();[...t.parentNode.children].forEach(x=>x.classList.toggle("on",x===t));k==="theme"?setTheme(v):applyS()}
+  else if(t.dataset.c)setAcc(t.dataset.c);
+  else if(t.dataset.i)setWP(t.dataset.i==="custom"?"custom":+t.dataset.i);
+  else if(t.dataset.ac!==undefined){pickAcc(+t.dataset.ac);settings(b);lock(true)}
+  else if(t.id==="aa")showSetup(true);
+  else if(t.id==="ad"){S.acs.splice(S.cur,1);S.cur=0;S.name=S.acs[0].name;S.pw=S.acs[0].pw;save();applyS();settings(b);lock(true)}
+  else if(t.id==="upb")q("#upf").click();
+  else if(t.id==="rs"){S={...DEF,tg:{...DEF.tg},acs:S.acs,cur:S.cur,name:S.name,pw:S.pw};save();applyS();settings(b)}
+  else if(t.id==="pb"){const m=q("#pm"),c=q("#p0").value,n=q("#p1").value;
+   if(S.pw&&await H(c)!==S.pw)m.textContent="Current password is wrong.";
+   else if(n!==q("#p2").value)m.textContent="Passwords don’t match.";
+   else if(n&&n.length<4)m.textContent="Use at least 4 characters.";
+   else{S.pw=n?await H(n):null;save();applyS();m.textContent=n?"Password saved.":"Password removed.";["#p0","#p1","#p2"].forEach(s=>q(s).value="");q("#p0").style.display=S.pw?"":"none"}}};
+ b.oninput=e=>{const t=e.target,s=t.dataset.s;if(!s)return;
+  if(s==="blur"){S.blur=+t.value;R.style.setProperty("--blur",t.value+"px");save()}
+  else if(s==="vol")setVol(+t.value);else if(s==="br")setBr(+t.value);
+  else if(s==="name"){S.name=t.value;save();applyS()}};
+ q("#upf").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1920/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=im.width*k;c.height=im.height*k;c.getContext("2d").drawImage(im,0,0,c.width,c.height);S.custom=c.toDataURL("image/jpeg",.82);setWP("custom");settings(b)};im.src=r.result};r.readAsDataURL(f)};
+}
+function norm(u){u=u.trim();if(/^(nava|https?):\/\//i.test(u))return u;if(/^[^\s]+\.[a-z]{2,}(\/.*)?$/i.test(u))return"https://"+u;return"nava://search?q="+encodeURIComponent(u)}
+function web(b){
+ const T=[{h:["nava://start"],i:0}];let c=0;
+ b.style.cssText="padding:0;display:flex;flex-direction:column;overflow:hidden";
+ b.innerHTML='<div class="wt"></div><div class="wb"><button data-a="b" aria-label="Back">‹</button><button data-a="f" aria-label="Forward">›</button><button data-a="r" aria-label="Reload">↻</button><input class="url" aria-label="Address"><a class="ext" target="_blank" rel="noopener">Open in tab ↗</a></div><div class="wc"></div>';
+ const q=s=>b.querySelector(s),cur=()=>T[c].h[T[c].i];
+ const ttl=u=>{if(u==="nava://start")return"Start";if(u==="nava://about")return"About";if(u.startsWith("nava://wiki/"))return decodeURIComponent(u.slice(12));try{return new URL(u).hostname.replace(/^www\./,"")}catch(e){return u}};
+ function draw(){draw0();const u=cur();if(u.startsWith("nava://search")||u.startsWith("nava://wiki/"))reader(q(".wc"),u)}
+ function draw0(){const u=cur(),ext=u.startsWith("http");
+  q(".wt").innerHTML=T.map((t,i)=>`<button class="tab ${i===c?"on":""}" data-t="${i}">${ttl(t.h[t.i])}<i data-x="${i}">×</i></button>`).join("")+'<button class="tab" data-n="1" aria-label="New tab">+</button>';
+  q(".url").value=u;const e=q(".ext");e.style.display=ext?"":"none";e.href=ext?u:"#";
+  q(".wc").innerHTML=ext?`<iframe src="${u.replace(/"/g,"%22")}" referrerpolicy="no-referrer" sandbox="allow-scripts allow-forms allow-same-origin allow-popups"></iframe>`:u==="nava://about"?'<div class="bw"><h2>Nava Browser</h2><p style="color:var(--tx2)">Tabs, history and an address bar. Many sites refuse to load inside another page, so use Open in tab for those.</p></div>':'<div class="bw"><h2>Search the web</h2><input class="bq" placeholder="Search or enter an address" aria-label="Search" autocomplete="off"><div class="qk">'+[["Wikipedia","nava://wiki/Linux"],["GitHub","https://github.com"],["YouTube","https://www.youtube.com"],["About","nava://about"]].map(([n,l])=>`<button data-go="${l}">${n}</button>`).join("")+"</div></div>"}
+ const go=u=>{const t=T[c];u=norm(u);t.h=t.h.slice(0,t.i+1);t.h.push(u);t.i++;draw()};
+ b.onclick=e=>{const t=e.target.closest("button,i");if(!t)return;const d=t.dataset;
+  if(d.go)go(d.go);else if(d.n){T.push({h:["nava://start"],i:0});c=T.length-1;draw()}
+  else if(d.x!==undefined){T.splice(+d.x,1);if(!T.length)T.push({h:["nava://start"],i:0});c=Math.min(c,T.length-1);draw()}
+  else if(d.t!==undefined){c=+d.t;draw()}
+  else if(d.a==="b"&&T[c].i>0){T[c].i--;draw()}else if(d.a==="f"&&T[c].i<T[c].h.length-1){T[c].i++;draw()}else if(d.a==="r")draw()};
+ b.onkeydown=e=>{if(e.key==="Enter"&&(e.target.classList.contains("url")||e.target.classList.contains("bq")))go(e.target.value)};
+ draw();
+}
+function addLx(n){n=String(n).toLowerCase().replace(/[^a-z0-9-]/g,"");if(!n||APPS[n])return;APPS[n]={t:n[0].toUpperCase()+n.slice(1),i:'<rect x="4" y="5" width="16" height="14" rx="3"/><path d="M4 9h16"/>',c:"linear-gradient(135deg,#a3e635,#16a34a)",b:b=>{b.innerHTML=`<p><b>${n}</b> is a simulated Linux app.</p><p style="color:var(--tx2)">In a real Nava system, Linux apps would run natively in the compositor.</p>`}};if(!S.lx)S.lx=[];if(!S.lx.includes(n)){S.lx.push(n);save()}dock()}
+$("#dock").addEventListener("pointermove",e=>document.querySelectorAll("#dock button").forEach(b=>{const r=b.getBoundingClientRect(),s=1+.55*Math.max(0,1-Math.abs(e.clientX-r.left-r.width/2)/110);b.style.transform=`translateY(${-(s-1)*14}px) scale(${s})`}));
+$("#dock").addEventListener("pointerleave",()=>document.querySelectorAll("#dock button").forEach(b=>b.style.transform=""));
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function pickAcc(i){save();S.cur=i;S.name=S.acs[i].name;S.pw=S.acs[i].pw;save();applyS()}
+function showSetup(add){$("#setup").classList.add("open");$("#sh").textContent=add?"Add an account":"Create your account";$("#sc2").style.display=add?"":"none";["#s1","#s2","#s3"].forEach(s=>$(s).value="");$("#se").textContent="";setTimeout(()=>$("#s1").focus(),60)}
+$("#sc2").onclick=()=>$("#setup").classList.remove("open");
+$("#setup").onkeydown=e=>{if(e.key==="Enter")$("#sb").click()};
+$("#lac").onclick=e=>{const t=e.target.closest("button");if(t){e.stopPropagation();pickAcc(+t.dataset.ac)}};
+$("#sb").onclick=async()=>{const n=$("#s1").value.trim(),p=$("#s2").value,e=$("#se");
+ if(!n)return e.textContent="Enter a name.";
+ if(S.acs.some(a=>a.name.toLowerCase()===n.toLowerCase()))return e.textContent="That name is already used.";
+ if(p!==$("#s3").value)return e.textContent="Passwords don’t match.";
+ if(p&&p.length<4)return e.textContent="Use at least 4 characters.";
+ save();S.acs.push({name:n,pw:p?await H(p):null,c:ACC[S.acs.length%ACC.length]});S.cur=S.acs.length-1;S.name=n;S.pw=S.acs[S.cur].pw;save();$("#setup").classList.remove("open");applyS();lock(false)};
+async function reader(el,u){
+ const wk="https://en.wikipedia.org/w/api.php?format=json&origin=*&action=query&",q0=u.startsWith("nava://search")?decodeURIComponent(u.split("q=")[1]||""):"";
+ el.innerHTML='<div class="bw"><p>Loading…</p></div>';
+ try{
+  if(q0||u==="nava://search"){const r=(await(await fetch(wk+"list=search&srlimit=10&srsearch="+encodeURIComponent(q0))).json()).query.search,dec=s=>new DOMParser().parseFromString(s,"text/html").body.textContent;
+   el.innerHTML='<div class="rd"><h3>Results for “'+esc(q0)+'”</h3>'+(r.length?r.map(x=>`<button class="hit" data-go="nava://wiki/${encodeURIComponent(x.title)}"><b>${esc(x.title)}</b><span>${esc(dec(x.snippet))}</span></button>`).join(""):"<p>No results.</p>")+`<p><a target="_blank" rel="noopener" href="https://duckduckgo.com/?q=${encodeURIComponent(q0)}">Search the web in a new tab ↗</a></p></div>`}
+  else{const t=decodeURIComponent(u.slice(12)),p=Object.values((await(await fetch(wk+"prop=extracts|info&inprop=url&explaintext=1&redirects=1&titles="+encodeURIComponent(t))).json()).query.pages)[0];
+   el.innerHTML=`<div class="rd"><h3>${esc(p.title)}</h3><pre class="ar">${esc((p.extract||"No article found.").slice(0,7000))}</pre><p><a target="_blank" rel="noopener" href="${esc(p.fullurl||"https://en.wikipedia.org")}">Open on Wikipedia ↗</a></p></div>`}
+ }catch(e){el.innerHTML='<div class="bw"><h2>Can’t reach the internet</h2><p style="color:var(--tx2)">This hosted page can’t make web requests. Download the file and open it on your computer to browse online.</p>'+(q0?`<p><a target="_blank" rel="noopener" href="https://duckduckgo.com/?q=${encodeURIComponent(q0)}">Search in a new tab ↗</a></p>`:"")+'</div>'}
+}
+function cmds(){
+ const a=Object.keys(APPS).map(k=>({n:APPS[k].t,s:"App",f:()=>openApp(k)}));
+ return a.concat([
+  {n:"Tile windows",s:"Layout",f:tile},
+  {n:"Lock screen",s:"System",f:()=>lock(true)},
+  {n:"Toggle dark mode",s:"Theme",f:()=>setTheme(isDark()?"light":"dark")},
+  {n:"Open Control Center",s:"System",f:()=>setTimeout(()=>$("#cc").classList.add("open"),30)},
+  {n:"Workspace 1",s:"Workspace",f:()=>gotoWs(0)},
+  {n:"Workspace 2",s:"Workspace",f:()=>gotoWs(1)},
+  {n:"Workspace 3",s:"Workspace",f:()=>gotoWs(2)}]);
+}
+function renderRes(){
+ const q=$("#q").value.toLowerCase();
+ list=cmds().filter(c=>c.n.toLowerCase().includes(q));
+ sel=Math.min(sel,Math.max(0,list.length-1));
+ $("#res").innerHTML=list.map((c,i)=>`<button class="${i===sel?"sel":""}" data-i="${i}">${c.n}<small>${c.s}</small></button>`).join("");
+}
+function cmd(open){
+ const c=$("#cmd");
+ if(open===undefined)open=!c.classList.contains("open");
+ c.classList.toggle("open",open);
+ if(open){$("#cc").classList.remove("open");$("#q").value="";sel=0;renderRes();setTimeout(()=>$("#q").focus(),20)}
+}
+function run(i){const c=list[i];if(c){cmd(false);c.f()}}
+$("#q").oninput=()=>{sel=0;renderRes()};
+$("#q").onkeydown=e=>{
+ if(e.key==="ArrowDown"){sel=Math.min(list.length-1,sel+1);renderRes();e.preventDefault()}
+ else if(e.key==="ArrowUp"){sel=Math.max(0,sel-1);renderRes();e.preventDefault()}
+ else if(e.key==="Enter")run(sel);
+};
+$("#res").onclick=e=>{const b=e.target.closest("button");if(b)run(+b.dataset.i)};
+$("#cmd").onclick=e=>{if(e.target.id==="cmd")cmd(false)};
+$("#nv").onclick=()=>cmd();
+$("#st").onclick=()=>{cmd(false);$("#cc").classList.toggle("open")};
+$("#dock").onclick=e=>{const b=e.target.closest("button");if(b)openApp(b.dataset.a)};
+$("#dots").onclick=e=>{if(e.target.dataset.w)gotoWs(+e.target.dataset.w)};
+$("#cc").onclick=e=>{
+ const b=e.target.closest("button");if(!b)return;
+ const t=b.dataset.t,s=b.querySelector("small");
+ if(t==="dark"){setTheme(isDark()?"light":"dark");return}
+ if(t==="lock"){lock(true);return}
+ if(t==="fs"){document.fullscreenElement?document.exitFullscreen():R.requestFullscreen&&R.requestFullscreen();return}
+ b.classList.toggle("on");const on=b.classList.contains("on");S.tg[t]=on;save();
+ s.textContent=t==="wifi"?(on?"Nava‑Home":"Off"):on?"On":"Off";
+};
+$("#br").oninput=e=>setBr(+e.target.value);$("#vol").oninput=e=>setVol(+e.target.value);
+document.addEventListener("pointerdown",e=>{if(!e.target.closest("#cc,#st"))$("#cc").classList.remove("open")});
+document.addEventListener("keydown",e=>{
+ if((e.metaKey||e.ctrlKey||e.altKey)&&e.code==="Space"){e.preventDefault();cmd()}
+ else if(e.key==="Escape"){cmd(false);$("#cc").classList.remove("open")}
+ else if(e.altKey&&/^[1-3]$/.test(e.key)){gotoWs(+e.key-1)}
+ else if(e.altKey&&e.key==="l"){lock(true)}
+});
+if(!S.acs.length&&(S.name||S.pw))S.acs=[{name:S.name||"User",pw:S.pw,c:S.acc}];dots();dock();applyS();syncDark();(S.lx||(S.lx=[])).slice().forEach(n=>addLx(n));if(!S.acs.length)showSetup(false);setInterval(()=>{clock();lockT()},15000);setTimeout(()=>$("#lp").focus(),150);
+setTimeout(()=>$("#hint").style.display="none",9000);
+openApp("terminal");
+</script>
+</body>
+</html>
