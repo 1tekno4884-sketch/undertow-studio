@@ -1,6 +1,6 @@
 # Undertow Studio
 
-Apps and an operating system made by Tekno.
+Apps and an operating system made by Brayden.
 
 - **Cobalt**: blue Material 3 productivity app (tasks, alarms, focus timer, StandBy mode, widgets)
 - **Tide**: minimal list-style Android launcher
