@@ -476,8 +476,8 @@ footer b{color:var(--on-surface)}
             <span class="ms pv-go">open_in_new</span>
           </a>
           <div class="card-actions">
-            <a class="btn dl" href="nava-os-2026.11.14-x86_64.iso" download="nava-os-2026.11.14-x86_64.iso" data-name="Nava OS"><span class="ms">download</span>Download ISO</a>
-            <span class="size"><span class="ms">album</span>2.2 GB</span>
+            <a class="btn dl" href="https://github.com/1tekno4884-sketch/undertow-studio/releases/download/nava-os-2026.11.14/nava-os-2026.11.14-x86_64.iso.xz" data-name="Nava OS"><span class="ms">download</span>Download ISO</a>
+            <span class="size"><span class="ms">album</span>2.1 GB (.iso.xz)</span>
           </div>
         </article>
 
@@ -500,8 +500,8 @@ footer b{color:var(--on-surface)}
         <div class="help-card">
           <h4><span class="ms fill">usb</span>Nava OS (ISO)</h4>
           <ol>
-            <li>Download the ISO and get a USB stick of 4 GB or more (it will be erased).</li>
-            <li>Write the ISO with <b>balenaEtcher</b> or <b>Rufus</b> (DD mode), or <code>dd</code> on Linux.</li>
+            <li>Download the ISO (<code>.iso.xz</code>) and get a USB stick of 4 GB or more (it will be erased).</li>
+            <li>Flash it with <b>balenaEtcher</b> or <b>Rufus</b> (DD mode). Both open the <code>.xz</code> file directly, no unzipping needed.</li>
             <li>Restart your PC, open its boot menu and choose the USB stick.</li>
             <li>Nava starts live. Live user: <code>tekno</code>, password <code>0000</code>.</li>
             <li>To keep it, open the launcher and choose <b>Install Nava OS</b>. The disk you pick is erased.</li>
@@ -512,7 +512,7 @@ footer b{color:var(--on-surface)}
           <ol>
             <li>Use QEMU/KVM, VirtualBox or VMware with 4 GB RAM and 2+ CPU cores.</li>
             <li>Turn on <b>3D acceleration</b>: the desktop needs a GPU, even a virtual one.</li>
-            <li>Attach the ISO as a CD and boot.</li>
+            <li>Unpack the <code>.xz</code> with 7-Zip (Windows) or <code>xz -d</code> (Linux/macOS), then attach the ISO as a CD and boot.</li>
           </ol>
         </div>
       </div>
