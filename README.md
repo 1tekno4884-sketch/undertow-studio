@@ -27,3 +27,7 @@ then add a row for it to that app's list in `archive.html` (newest first) and bu
 
 Every app card has a "Send feedback" section that opens the visitor's email app (mailto:) to
 undertowstudio48@gmail.com with the app, version, type and message filled in.
+
+
+## "Recently updated" stamp
+Each app card in `index.html` has `data-updated="<ISO time>"`. When you update an app, set it to the time of the update; the card shows a "Recently updated" tag for 24 hours.
