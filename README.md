@@ -16,3 +16,14 @@ That file proves to Google Search Console that this site belongs to Brayden. Goo
 re-checks it from time to time: if it's deleted, renamed or edited, the site loses its
 verification. Leave it exactly as it is, and don't link to it from the pages or add it to
 `sitemap.xml` (it's meant to stay unlisted).
+
+## Version archive (`archive.html`, `archive/`)
+
+Started 21 Nov 2026. When an app is updated, **move the previous APK into `archive/`** as
+`<App>-<version>.apk` (e.g. `git mv Lumen.apk archive/Lumen-1.5.apk`) before copying the new one in,
+then add a row for it to that app's list in `archive.html` (newest first) and bump the "Current" row.
+
+## Feedback
+
+Every app card has a "Send feedback" section that opens the visitor's email app (mailto:) to
+undertowstudio48@gmail.com with the app, version, type and message filled in.
