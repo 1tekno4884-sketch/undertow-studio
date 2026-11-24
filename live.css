@@ -1,0 +1,99 @@
+/* Undertow live bits (loaded lazily by index.html): Beacons (announcements) + Harbor (discussions under the app cards). */
+.beacon{position:relative;display:flex;gap:12px;align-items:flex-start;padding:12px 8px 12px 14px;border-radius:18px;font-size:14.5px;line-height:1.45;
+  background:var(--primary-container);color:var(--on-primary-container);animation:bc-in .5s var(--ease-emph)}
+@keyframes bc-in{from{opacity:0;transform:translateY(-8px)}}
+.beacon>.ms{flex:none;margin-top:1px}
+.beacon .bc-body{flex:1;min-width:0}
+.beacon b{display:block;font-weight:650}
+.beacon p{margin-top:2px;opacity:.92;white-space:pre-line;overflow-wrap:anywhere}
+.beacon a.bc-link{display:inline-flex;align-items:center;gap:4px;margin-top:6px;font-weight:650;color:inherit;text-underline-offset:3px}
+.beacon a.bc-link .ms{font-size:18px}
+.beacon .bc-x{flex:none;width:36px;height:36px;margin:-6px 0;border-radius:50%;border:0;background:transparent;color:inherit;cursor:pointer;display:grid;place-items:center}
+.beacon .bc-x:hover{background:color-mix(in srgb,currentColor 12%,transparent)}
+.beacon .bc-x:focus-visible{outline:2px solid currentColor}
+.beacon.celebrate{background:linear-gradient(120deg,color-mix(in srgb,var(--primary) 22%,var(--primary-container)),var(--primary-container) 60%,color-mix(in srgb,#7fe3ff 30%,var(--primary-container)))}
+.beacon.warning{background:#ffe3b0;color:#3d2600}
+:root[data-theme="dark"] .beacon.warning{background:#5c3d00;color:#ffdea6}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .beacon.warning{background:#5c3d00;color:#ffdea6}}
+.hero .beacon{max-width:760px;margin-bottom:22px;background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.26);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.hero .beacon p{font-size:14.5px;max-width:none;opacity:.92}
+.hero .beacon.warning{background:rgba(255,196,80,.28)}
+.hero .beacon.celebrate{background:linear-gradient(120deg,rgba(255,255,255,.22),rgba(127,227,255,.22))}
+.card .beacon{margin-top:14px}
+
+/* Harbor: the discussion under a card. An open discussion makes its card span the whole row. */
+.card.wide{grid-column:1/-1}
+details.disc summary .count{font-weight:500;color:var(--on-surface-variant);font-size:13px}
+.hb{padding:0 16px 16px;display:grid;gap:12px;font-size:14.5px}
+.hb-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.hb-bar .grow{flex:1}
+.hb-chip{height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--outline-variant);background:transparent;color:var(--on-surface);font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.hb-chip[aria-pressed="true"]{background:var(--secondary-container);color:var(--on-secondary-container);border-color:transparent}
+.hb-chip:focus-visible,.hb-btn:focus-visible,.hb-act:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+.hb-btn{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border-radius:999px;border:0;cursor:pointer;font:inherit;font-size:13.5px;font-weight:650;
+  background:var(--primary);color:var(--on-primary)}
+.hb-btn.tonal{background:var(--secondary-container);color:var(--on-secondary-container)}
+.hb-btn.text{background:transparent;color:var(--primary)}
+.hb-btn[disabled]{opacity:.5;cursor:default}
+.hb-btn .ms{font-size:18px}
+.hb-me{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--on-surface-variant)}
+.hb-compose{display:grid;gap:8px}
+.hb textarea,.hb input,.hb select{width:100%;border-radius:12px;border:1px solid color-mix(in srgb,var(--on-surface-variant) 30%,transparent);background:var(--surface);
+  color:var(--on-surface);padding:10px 12px;font:inherit;font-size:14px}
+.hb textarea{min-height:76px;resize:vertical}
+.hb textarea:focus,.hb input:focus,.hb select:focus{outline:2px solid var(--primary);outline-offset:0;border-color:transparent}
+.hb-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.hb-note{font-size:12.5px;color:var(--on-surface-variant)}
+.hb-err{font-size:13px;color:#ba1a1a;min-height:0}
+:root[data-theme="dark"] .hb-err{color:#ffb4ab}
+.hb-list{list-style:none;display:grid;gap:10px}
+.hb-post{background:var(--surface);border-radius:16px;padding:12px 12px 6px}
+.hb-post.pinned{box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--primary) 40%,transparent)}
+.hb-head{display:flex;align-items:center;gap:8px;min-width:0;flex-wrap:wrap}
+.hb-av{width:32px;height:32px;border-radius:50%;flex:none;object-fit:cover;background:var(--primary-container);color:var(--on-primary-container);
+  display:grid;place-items:center;font-weight:800;font-size:14px;overflow:hidden}
+.hb-name{font-weight:650;overflow-wrap:anywhere}
+.hb-user,.hb-time{color:var(--on-surface-variant);font-size:12.5px}
+.hb-badge{display:inline-grid;place-items:center;color:var(--primary)}
+.hb-badge .ms{font-size:16px}
+.hb-badge.owner{color:#1565ff}
+.hb-ribbon{display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 8px;border-radius:999px;font-size:11.5px;font-weight:700;color:#fff;
+  background:var(--rb1,#1565ff);background:linear-gradient(90deg,var(--rb1,#1565ff),var(--rb2,var(--rb1,#1565ff)))}
+.hb-ribbon .ms{font-size:14px}
+.hb-flag{display:inline-flex;align-items:center;gap:3px;font-size:12px;font-weight:650;color:var(--primary)}
+.hb-flag .ms{font-size:15px}
+.hb-text{margin:6px 0 2px 40px;white-space:pre-wrap;overflow-wrap:anywhere}
+.hb-text a{color:var(--primary)}
+.hb-acts{display:flex;flex-wrap:wrap;gap:2px;margin-left:32px}
+.hb-act{display:inline-flex;align-items:center;gap:4px;height:32px;padding:0 8px;border-radius:999px;border:0;background:transparent;color:var(--on-surface-variant);
+  font:inherit;font-size:12.5px;font-weight:600;cursor:pointer}
+.hb-act:hover{background:color-mix(in srgb,var(--primary) 10%,transparent)}
+.hb-act .ms{font-size:18px}
+.hb-act[aria-pressed="true"]{color:#e0245e}
+.hb-act[aria-pressed="true"] .ms{font-variation-settings:"FILL" 1,"wght" 500,"opsz" 24}
+.hb-replies{list-style:none;display:grid;gap:6px;margin:4px 0 6px 32px;padding-left:10px;border-left:2px solid var(--outline-variant)}
+.hb-replies .hb-post{padding:8px 8px 2px;background:transparent}
+.hb-replies .hb-av{width:26px;height:26px;font-size:12px}
+.hb-replies .hb-text{margin-left:34px}
+.hb-replies .hb-acts{margin-left:26px}
+.hb-empty{text-align:center;padding:18px;color:var(--on-surface-variant)}
+.hb-mod{background:var(--surface);border-radius:16px;padding:12px;display:grid;gap:10px}
+.hb-mod h5{font-size:14px;display:flex;align-items:center;gap:6px}
+.hb-mod .item{border-top:1px solid var(--outline-variant);padding-top:8px;display:grid;gap:6px}
+dialog.hb-dlg{border:0;border-radius:24px;padding:24px;max-width:min(420px,calc(100% - 32px));width:100%;background:var(--surface-2);color:var(--on-surface);box-shadow:var(--shadow-hi)}
+dialog.hb-dlg::backdrop{background:var(--scrim)}
+dialog.hb-dlg h3{font-size:20px;margin-bottom:6px}
+dialog.hb-dlg form{display:grid;gap:10px;font-size:14.5px}
+dialog.hb-dlg .hb-row{justify-content:flex-end}
+dialog.hb-dlg a{color:var(--primary)}
+@media (max-width:600px){.hb{padding:0 12px 12px}.hb-text{margin-left:0}.hb-acts{margin-left:-6px}.hb-replies{margin-left:6px}.hb-replies .hb-text{margin-left:0}.hb-replies .hb-acts{margin-left:-6px}}
+@media (prefers-reduced-motion:reduce){.beacon{animation:none}}
+/* undo the card's "What it does" list styles (details.feat ul/li) inside Harbor */
+details.feat .hb ul{padding:0;gap:10px}
+details.feat .hb ul.hb-replies{padding:0 0 0 10px;gap:6px}
+details.feat .hb li{display:block;font-size:14.5px;color:var(--on-surface)}
+details.feat .hb li .ms{margin-top:0;color:inherit;font-size:18px}
+details.feat .hb li .hb-badge .ms{font-size:16px}
+details.feat .hb li .hb-ribbon .ms{font-size:14px}
+details.feat .hb li .hb-flag .ms{font-size:15px}
+details.feat .hb li.hb-empty{text-align:center;color:var(--on-surface-variant)}

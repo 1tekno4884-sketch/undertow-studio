@@ -947,6 +947,10 @@ details.feat.fb summary>.ms:first-child{color:var(--primary)}
             <span class="size"><span class="ms">folder_zip</span>12.8 MB</span>
           </div>
         
+          <details class="feat disc" id="ripple-discussion" data-board="ripple">
+            <summary><span class="ms">forum</span>Harbor: talk about Ripple<span class="count"></span><span class="ms chev">expand_more</span></summary>
+            <div class="feat-body"><div><div class="hb"><p class="fb-note">Loading the discussion…</p></div></div></div>
+          </details>
           <details class="feat fb" data-app="Ripple">
             <summary><span class="ms">feedback</span>Send feedback<span class="ms chev">expand_more</span></summary>
             <div class="feat-body"><div>
@@ -1010,6 +1014,10 @@ details.feat.fb summary>.ms:first-child{color:var(--primary)}
             <a class="btn ghost" href="https://1tekno4884-sketch.github.io/sonar-web/" target="_blank" rel="noopener"><span class="ms">open_in_new</span>Open Sonar on the web</a>
             <span class="size"><span class="ms">folder_zip</span>101.3 MB</span>
           </div>
+          <details class="feat disc" id="sonar-discussion" data-board="sonar">
+            <summary><span class="ms">forum</span>Harbor: talk about Sonar<span class="count"></span><span class="ms chev">expand_more</span></summary>
+            <div class="feat-body"><div><div class="hb"><p class="fb-note">Loading the discussion…</p></div></div></div>
+          </details>
           <details class="feat fb" data-app="Sonar">
             <summary><span class="ms">feedback</span>Send feedback<span class="ms chev">expand_more</span></summary>
             <div class="feat-body"><div>
@@ -1269,6 +1277,18 @@ details.feat.fb summary>.ms:first-child{color:var(--primary)}
     b.innerHTML='<span class="ms">new_releases</span>Recently updated';
     meta.insertBefore(b,meta.firstChild);
   });
+})();
+</script>
+<script>
+// Beacons (announcements) + Harbor (discussions): one small script + stylesheet, loaded when the page is idle
+// or as soon as a discussion is opened.
+(function(){
+  var done=0;
+  function go(){if(done++)return;var l=document.createElement('link');l.rel='stylesheet';l.href='live.css?v=1';document.head.appendChild(l);
+    var s=document.createElement('script');s.src='live.js?v=1';s.async=true;document.body.appendChild(s)}
+  document.querySelectorAll('details.disc').forEach(function(x){x.addEventListener('toggle',go,{once:true})});
+  if(/-discussion$/.test(location.hash))go();
+  else addEventListener('load',function(){'requestIdleCallback' in window?requestIdleCallback(go,{timeout:3000}):setTimeout(go,1500)});
 })();
 </script>
 </body>
